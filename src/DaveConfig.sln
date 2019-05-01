@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaveConfig", "DaveConfig\DaveConfig.csproj", "{FAC82D51-6800-48B3-9151-304A19CF982B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaveConfig.Test", "DaveConfig.Test\DaveConfig.Test.csproj", "{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAC82D51-6800-48B3-9151-304A19CF982B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAC82D51-6800-48B3-9151-304A19CF982B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAC82D51-6800-48B3-9151-304A19CF982B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAC82D51-6800-48B3-9151-304A19CF982B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1AB297F8-5D32-4500-AF2B-BB34A367DB0C}
+	EndGlobalSection
+EndGlobal
