@@ -14,6 +14,7 @@ namespace DaveConfig
         public abstract void SaveConfiguration();
         public abstract ICollection<string> GetOptions();
         public abstract string GetOption(string optionName);
+        public abstract string GetOption(string optionName, string defaultValue);
         public abstract void SetOption(string optionName, object value);
 
         public void DoOptionUpdatedEvent(string optionName, string newValue)

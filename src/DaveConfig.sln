@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaveConfig", "DaveConfig\DaveConfig.csproj", "{FAC82D51-6800-48B3-9151-304A19CF982B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaveConfig", "DaveConfig\DaveConfig.csproj", "{FAC82D51-6800-48B3-9151-304A19CF982B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaveConfig.Test", "DaveConfig.Test\DaveConfig.Test.csproj", "{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaveConfig.Test", "DaveConfig.Test\DaveConfig.Test.csproj", "{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaveConfig.Example.BasicUsage", "DaveConfig.Example.BasicUsage\DaveConfig.Example.BasicUsage.csproj", "{E9F180C2-FC5A-4AC0-99DB-DF54B3FDB913}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96511C98-9CBA-4DD7-B5D3-5EDDA0867C76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9F180C2-FC5A-4AC0-99DB-DF54B3FDB913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9F180C2-FC5A-4AC0-99DB-DF54B3FDB913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9F180C2-FC5A-4AC0-99DB-DF54B3FDB913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9F180C2-FC5A-4AC0-99DB-DF54B3FDB913}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

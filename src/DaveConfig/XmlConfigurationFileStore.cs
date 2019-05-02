@@ -14,24 +14,29 @@ namespace DaveConfig
         public XmlConfigurationFileStore(string configFilename)
         {
             _configFilename = configFilename;
-            _serializer = new XmlSerializer(typeof(OptionsCollection));
+            _serializer = new XmlSerializer(typeof(SerializableOptionsCollection));
         }
 
         public OptionsCollection LoadConfiguration()
         {
+            if (!File.Exists(_configFilename))
+                return new OptionsCollection();
+
             using (var f = File.Open(_configFilename, FileMode.Open))
             {
                 var config = _serializer.Deserialize(f);
 
-                return (OptionsCollection)config;
+                return ((SerializableOptionsCollection)config).ToOptionsCollection();
             }
         }
 
         public void SaveConfiguration(OptionsCollection options)
         {
+            var serializableOptions = new SerializableOptionsCollection(options);
+
             using (var f = File.Open(_configFilename, FileMode.Create))
             {
-                _serializer.Serialize(f, options);
+                _serializer.Serialize(f, serializableOptions);
             }
         }
     }

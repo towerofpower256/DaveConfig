@@ -31,10 +31,15 @@ namespace DaveConfig
 
         public override string GetOption(string optionName)
         {
+            return GetOption(optionName, String.Empty);
+        }
+
+        public override string GetOption(string optionName, string defaultValue = "")
+        {
             _lock.EnterReadLock();
             try
             {
-                return _options.ContainsKey(optionName) ? _options[optionName] : String.Empty;
+                return _options.ContainsKey(optionName) ? _options[optionName] : defaultValue;
             }
             finally
             {

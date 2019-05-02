@@ -10,6 +10,7 @@ namespace DaveConfig
         void SaveConfiguration();
         ICollection<string> GetOptions();
         string GetOption(string optionName);
+        string GetOption(string optionName, string defaultValue);
         void SetOption(string optionName, object value);
 
         event EventHandler<OptionUpdatedEventArgs> OnOptionUpdated;
