@@ -8,11 +8,49 @@ using System.IO;
 
 namespace DaveConfig.SerializedSections
 {
+    public class SettingsManagerOptions
+    {
+        public string RootElementName { get; set; }
+        public string FileName { get; set; }
+
+        public SettingsManagerOptions()
+        {
+            RootElementName = "Settings";
+            FileName = "settings.xml";
+        }
+    }
+
     public class SettingsManager
     {
         private Dictionary<Type, XElement> _sections = new Dictionary<Type, XElement>();
         private object _lock = new object();
+        private SettingsManagerOptions _options;
 
+        public SettingsManager() : this(new SettingsManagerOptions())
+        {
+
+        }
+        
+        public SettingsManager(SettingsManagerOptions options)
+        {
+            _options = options;
+        }
+
+        public IEnumerable<Type> GetSections()
+        {
+            lock (_lock)
+            {
+                return new List<Type>(_sections.Keys).ToArray();
+            }
+        }
+
+        public bool HasSection<TSection>() where TSection : ISettingsSection
+        {
+            lock (_lock)
+            {
+                return _sections.ContainsKey(typeof(TSection));
+            }
+        }
 
         public TSection GetSection<TSection>() where TSection : ISettingsSection
         {
@@ -33,7 +71,7 @@ namespace DaveConfig.SerializedSections
             }
         }
 
-        public void SaveSection<TSection>(TSection section) where TSection : ISettingsSection
+        public void SetSection<TSection>(TSection section) where TSection : ISettingsSection
         {
             //Serialize the section
             MemoryStream memStream = new MemoryStream();
@@ -51,6 +89,48 @@ namespace DaveConfig.SerializedSections
             }
         }
 
+        /// <summary>
+        /// Export the settings sections as an XmlElement.
+        /// </summary>
+        /// <returns></returns>
+        public XElement ExportSettings()
+        {
+            var r = new XElement(_options.RootElementName);
 
+            lock (_lock)
+            {
+                foreach (var section in _sections)
+                {
+                    r.Add(section);
+                }
+            }
+
+            return r;
+        }
+
+        public void ImportSettings(XElement serializedSettings)
+        {
+            lock (_lock)
+            {
+                //TODO how do I deserialize it into the correct types of objects?
+            }
+        }
+
+        public void SaveSettings()
+        {
+            var exportedSettings = ExportSettings();
+
+            using (var fs = File.Open(_options.FileName, FileMode.Create))
+            {
+                var writer = XmlWriter.Create(fs);
+                exportedSettings.Save(writer);
+            }
+        }
+
+        public void LoadSettings()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
     }
 }
