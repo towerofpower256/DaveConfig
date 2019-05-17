@@ -78,12 +78,13 @@ namespace DaveConfig.SerializedSections.Test
             });
 
             SettingsManager saveManager = new SettingsManager(ManagerOptions);
-            saveManager.SetSection(newSection);
+            saveManager.SetSection("test-section", newSection);
 
             saveManager.SaveSettings();
 
             SettingsManager loadManager = new SettingsManager(ManagerOptions);
-            loadManager
+            loadManager.LoadSettings();
+            var fetchedSection = loadManager.GetSection<TestSettingsSectionB>("test-section");
         }
 
         public static string NewGuid()

@@ -15,6 +15,7 @@ namespace DaveConfig.SerializedSections
 
         public SettingsManagerOptions()
         {
+            // Default settings
             RootElementName = "Settings";
             FileName = "settings.xml";
         }
@@ -22,7 +23,7 @@ namespace DaveConfig.SerializedSections
 
     public class SettingsManager
     {
-        private Dictionary<Type, XElement> _sections = new Dictionary<Type, XElement>();
+        private Dictionary<string, XElement> _sections = new Dictionary<string, XElement>();
         private object _lock = new object();
         private SettingsManagerOptions _options;
 
@@ -36,34 +37,34 @@ namespace DaveConfig.SerializedSections
             _options = options;
         }
 
-        public IEnumerable<Type> GetSections()
+        public IEnumerable<string> GetSections()
         {
             lock (_lock)
             {
-                return new List<Type>(_sections.Keys).ToArray();
+                return new List<string>(_sections.Keys).ToArray();
             }
         }
 
-        public bool HasSection<TSection>() where TSection : ISettingsSection
+        public bool HasSection(string desiredSection)
         {
             lock (_lock)
             {
-                return _sections.ContainsKey(typeof(TSection));
+                return _sections.ContainsKey(desiredSection);
             }
         }
 
-        public TSection GetSection<TSection>() where TSection : ISettingsSection
+        public TSection GetSection<TSection>(string sectionName) where TSection : ISettingsSection
         {
             lock (_lock)
             {
                 // Do we have that section?
-                if (!_sections.ContainsKey(typeof(TSection)))
+                if (!_sections.ContainsKey(sectionName))
                 {
                     // Handle unknown section
                 }
 
                 // Get it and deserialize it
-                XElement serializedSection = _sections[typeof(TSection)];
+                XElement serializedSection = _sections[sectionName];
                 XmlSerializer serializer = new XmlSerializer(typeof(TSection));
                 TSection section = (TSection)serializer.Deserialize(serializedSection.CreateReader());
 
@@ -73,19 +74,36 @@ namespace DaveConfig.SerializedSections
 
         public void SetSection<TSection>(TSection section) where TSection : ISettingsSection
         {
+            SetSection(section.GetSectionName(), section);
+        }
+
+        public void SetSection<TSection>(string sectionName, TSection section) where TSection : ISettingsSection
+        {
             //Serialize the section
             MemoryStream memStream = new MemoryStream();
             XmlSerializer serializer = new XmlSerializer(typeof(TSection));
-            serializer.Serialize(memStream, section);
+
+            // Set some writer settings
+            var xmlWriterSettings = new XmlWriterSettings();
+            xmlWriterSettings.OmitXmlDeclaration = true; // Prevent namespace declarations
+
+            var xmlWriter = XmlWriter.Create(memStream, xmlWriterSettings);
+
+            serializer.Serialize(xmlWriter, section);
 
             // Convert to XElement
             memStream.Position = 0; // Rewind the stream
             var xelement = XElement.Load(memStream);
 
+            SetSection(sectionName, xelement);
+        }
+
+        public void SetSection(string sectionName, XElement serializedSection)
+        {
             //Store it
             lock (_lock)
             {
-                _sections[typeof(TSection)] = xelement;
+                _sections[sectionName] = serializedSection;
             }
         }
 
@@ -95,42 +113,45 @@ namespace DaveConfig.SerializedSections
         /// <returns></returns>
         public XElement ExportSettings()
         {
-            var r = new XElement(_options.RootElementName);
+            var sections = new List<XElement>();
 
             lock (_lock)
             {
                 foreach (var section in _sections)
                 {
-                    r.Add(section);
+                    XElement newElement = new XElement("Section", (XElement)section.Value);
+                    newElement.SetAttributeValue("name", section.Key);
+                    sections.Add(newElement);
                 }
             }
 
+            var r = new XElement(_options.RootElementName, sections);
             return r;
         }
 
-        public void ImportSettings(XElement serializedSettings)
+        public void ImportSettings(IEnumerable<XElement> elements)
         {
-            lock (_lock)
+            foreach(var element in elements)
             {
-                //TODO how do I deserialize it into the correct types of objects?
+                //string key = element.Name.LocalName;
+                string key = (string)element.Attribute("name");
+                SetSection(key, new XElement((XElement)element.FirstNode));
             }
+            
         }
 
         public void SaveSettings()
         {
             var exportedSettings = ExportSettings();
 
-            using (var fs = File.Open(_options.FileName, FileMode.Create))
-            {
-                var writer = XmlWriter.Create(fs);
-                exportedSettings.Save(writer);
-            }
+            
+            new XDocument(exportedSettings).Save(_options.FileName);
         }
 
         public void LoadSettings()
         {
-            // TODO
-            throw new NotImplementedException();
+            XDocument doc = XDocument.Load(_options.FileName);
+            ImportSettings(doc.Root.Elements());
         }
     }
 }
