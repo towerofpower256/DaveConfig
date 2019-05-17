@@ -83,13 +83,11 @@ namespace DaveConfig.SerializedSections
             MemoryStream memStream = new MemoryStream();
             XmlSerializer serializer = new XmlSerializer(typeof(TSection));
 
-            // Set some writer settings
-            var xmlWriterSettings = new XmlWriterSettings();
-            xmlWriterSettings.OmitXmlDeclaration = true; // Prevent namespace declarations
+            // Dummy list of namespaces, to prevent declaring namespaces at the top of the XElement, trims junk
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
 
-            var xmlWriter = XmlWriter.Create(memStream, xmlWriterSettings);
-
-            serializer.Serialize(xmlWriter, section);
+            serializer.Serialize(memStream, section, namespaces);
 
             // Convert to XElement
             memStream.Position = 0; // Rewind the stream
